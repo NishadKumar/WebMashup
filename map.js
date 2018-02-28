@@ -1,31 +1,33 @@
-// Put your zillow.com API key here
+//My Zillow API Key
 var zwsid = "X1-ZWz1g132xfkgsr_55f1z";
 
 var request = new XMLHttpRequest();
 var out="";
 
+
+//Method to initialize the home page with a Google Map, marker on Lat:32.75,Long:-97.13
 function initialize () {
 	
 	var myLatLng = {lat: 32.75, lng: -97.13};
 	var geocoder = new google.maps.Geocoder();
   
-  var mapProp= {
-    center:new google.maps.LatLng(32.75,-97.13),
-    zoom:17,
-};
-	var map=new google.maps.Map(document.getElementById("map"),mapProp);
-    var marker = new google.maps.Marker({
-    position: myLatLng,
-    map: map,
-    title: ''+myLatLng.lat+','+myLatLng.lng
-  }); 
-  
+        var mapProp= {
+    		center:new google.maps.LatLng(32.75,-97.13),
+    		zoom:17,
+	};
+   	 var map=new google.maps.Map(document.getElementById("map"),mapProp);
+   	 var marker = new google.maps.Marker({
+    	 	position: myLatLng,
+   	 	map: map,
+    		title: ''+myLatLng.lat+','+myLatLng.lng
+  	});  
 }
 
+//Method to display results after user provides a search address on a house property.
 function displayResult () {
     if (request.readyState == 4) {
-        var xml = request.responseXML.documentElement;
-        var value = xml.getElementsByTagName("zestimate")[0].getElementsByTagName("amount")[0].innerHTML;
+       		var xml = request.responseXML.documentElement;
+        	var value = xml.getElementsByTagName("zestimate")[0].getElementsByTagName("amount")[0].innerHTML;
 		var latitude = xml.getElementsByTagName("response")[0].getElementsByTagName("address")[0].getElementsByTagName("latitude")[0].innerHTML;
 		var longitude = xml.getElementsByTagName("response")[0].getElementsByTagName("address")[0].getElementsByTagName("longitude")[0].innerHTML;
 		var street = xml.getElementsByTagName("response")[0].getElementsByTagName("address")[0].getElementsByTagName("street")[0].innerHTML
@@ -44,6 +46,7 @@ function clearRequest(){
 	document.getElementById("address").value = "";
 }
 
+//Method to manipulate user provided data and request Zillow provided API for required XML content to process later on.
 function sendRequest () {
     request.onreadystatechange = displayResult;
     var addressInput = document.getElementById("address").value;
@@ -54,9 +57,9 @@ function sendRequest () {
 	for(var i=0;i<addressArray.length-3;i++){
 		addressOnly+=addressArray[i]+" ";
 	}
-	console.log(addressOnly)
+	//console.log(addressOnly)
     var citystatezip = addressArray[addressArray.length-3]+" "+addressArray[addressArray.length-2]+" "+addressArray[addressArray.length-1];
-	console.log(citystatezip)
+	//console.log(citystatezip)
     request.open("GET","proxy.php?zws-id="+zwsid+"&address="+addressOnly+"&citystatezip="+citystatezip);
     request.withCredentials = "true";
     request.send(null);
@@ -130,14 +133,3 @@ function changeMarker(latitude,longitude,address,value){
 });
   
 }
-
-
-
-
-
-
-
-
-
-
-
